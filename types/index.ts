@@ -1,3 +1,4 @@
+// types/index.ts
 export type CustomerRole = 'homeowner' | 'architect' | 'builder' | 'dealer' | null;
 
 export interface GlassProduct {
@@ -86,8 +87,42 @@ export interface AIMatchResult {
   thickness: string;
   process: string;
   reason: string;
-  safetyNote?: string;
-  alternativeOption?: string;
+  safetyNote?: string | null;
+  alternativeOption?: string | null;
   estimatedPriceRange: string;
   applicationTips: string[];
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  role: CustomerRole;
+  avatar: string;
+  company?: string;
+  location: string;
+  joinedDate: string;
+}
+
+export interface OrderItem {
+  productId: string;
+  productName: string;
+  glassType: string;
+  thickness: string;
+  width: number;
+  height: number;
+  quantity: number;
+  areaSqFt: number;
+  ratePerSqFt: number;
+  total: number;
+}
+
+export interface Order {
+  id: string;
+  date: string;
+  status: 'pending' | 'confirmed' | 'in-production' | 'dispatched' | 'delivered' | 'cancelled';
+  items: OrderItem[];
+  vendorName: string;
+  totalAmount: number;
+  estimateRef: string;
 }

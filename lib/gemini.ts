@@ -1,11 +1,11 @@
+// lib/gemini.ts
 import { GoogleGenerativeAI } from '@google/generative-ai';
 
 let genAI: GoogleGenerativeAI | null = null;
 
-export function getGemini() {
-  if (!genAI) {
-    genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
-  }
+export function getGemini(): GoogleGenerativeAI | null {
+  if (!process.env.GEMINI_API_KEY) return null;
+  if (!genAI) genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
   return genAI;
 }
 

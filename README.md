@@ -1,50 +1,105 @@
 # AmalGus — World's First B2B2C Glass Marketplace
 
-A working prototype of the AmalGus Glass Marketplace demonstrating AI-powered glass discovery, real-time rate tracking, instant estimation, and vendor comparison.
+A working prototype of the AmalGus Glass Marketplace — AI-powered glass discovery, real-time pricing, instant estimation, and a complete glass ecosystem in one platform.
 
-## 🚀 Live Demo
-[Link to your Vercel deployment]
+## Live Demo
 
-## 🛠 Tech Stack
-- **Frontend + Backend:** Next.js 15 (App Router) + TypeScript
-- **AI:** OpenAI GPT-4o-mini (smart glass matching)
-- **Styling:** Tailwind CSS
-- **Deployment:** Vercel
+**[→ Live on Vercel](https://amalgus-glass-marketplace.vercel.app)**
 
-## ✅ Features Implemented
-- **Glass Product Catalog** — 10 glass types with full industry specs, search + filters (type, application, process, price)
-- **AI Smart Matching** — GPT-4o-mini reads plain-language requirements and recommends the right glass type, thickness, and process. Enforces safety rules (toughened for wet areas, laminated for heights, etc.)
-- **Customer Role Selection** — Homeowner / Architect / Builder / Dealer context passed to AI for tailored recommendations
-- **Estimate Generator** — Width × Height × Quantity → price breakdown with glass cost + installation estimate
-- **Vendor Comparison** — 2–3 verified vendors per product with ratings, location, delivery time, and price comparison
-- **Daily Rate Dashboard** — Live rate ticker + rate cards for 12 glass types with daily change indicators
-- **Allied Products Cross-Sell** — Compatible hardware, sealants, and fittings suggested per glass type
-- **Service Partner Network** — 6 verified installers with specialty, rating, location, and price
-- **Responsive UI** — Mobile-first design, dark premium aesthetic appropriate for the glass industry
+## Screenshots
+
+| Home + AI Advisor | Catalog | Estimate + Vendor Compare |
+|---|---|---|
+| Role-aware AI glass matching | Filter by type, application, price | Full quote with cross-sell |
+
+---
+
+## Features Implemented
+
+### Core (Required)
+| Feature | Status |
+|---|---|
+| Glass Product Catalog (10 types, full specs) | ✔ |
+| Search + filter (type, application, process, price) | ✔ |
+| AI Smart Matching — Gemini 1.5-flash | ✔ |
+| Rule-based fallback (works without API key) | ✔ |
+| Estimate Generator (mm → sq.ft → ₹) | ✔ |
+| Responsive UI, industry terminology | ✔ |
+
+### Bonus Features
+| Feature | Status |
+|---|---|
+| Multi-vendor comparison (per product) | ✔ |
+| Daily rate dashboard + live ticker | ✔ |
+| Allied products cross-sell on estimate | ✔ |
+| Service partner directory (6 partners) | ✔ |
+| Customer role selection (changes UI + recommendations) | ✔ |
+| Deployment on Vercel | ✔ |
+
+---
 
 ## 🏗 Architecture
+
+```bash
 app/
-├── api/ai-match/    → OpenAI GPT-4o-mini glass recommendation endpoint
-├── api/estimate/    → Price calculation endpoint (mm → sq.ft → cost)
-├── catalog/         → Filterable glass product catalog
-├── estimate/        → Quote generator with vendor compare
-├── rates/           → Daily rate dashboard
-└── partners/        → Service installer directory
-data/                → Mock data (glass products, vendors, rates, allied products)
-components/          → Reusable UI components
-types/               → TypeScript interfaces
-lib/                 → OpenAI client
+├── api/
+│   ├── ai-match/     → Gemini AI glass recommendation (+ rule-based fallback)
+│   └── estimate/     → Price calculation API (mm² → sq.ft → cost breakdown)
+├── catalog/          → Filterable glass product catalog
+├── estimate/         → Quote generator with vendor compare + allied products
+├── rates/            → Daily rate dashboard
+└── partners/         → Certified installer directory
+components/           → Reusable UI components
+data/                 → Mock data (products, vendors, rates, allied)
+lib/                  → Gemini client, rule-based matcher
+types/                → TypeScript interfaces
+```
+
+---
+
+## 🛠 Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Frontend + Backend | Next.js 15 (App Router) + TypeScript |
+| AI | Google Gemini 1.5-flash API |
+| Fallback AI | Expert rule-based glass matching engine |
+| Styling | Tailwind CSS + custom CSS design system |
+| Fonts | Syne (display) + DM Sans (body) |
+| Deployment | Vercel |
+
+---
 
 ## 🔧 Setup
-1. Clone repo
-2. `npm install`
-3. Create `.env.local` with `OPENAI_API_KEY=your_key`
-4. `npm run dev`
 
-## 📊 Industry Context
-This prototype reflects real glass industry knowledge:
-- Correct glass type + thickness + process combinations
-- Safety compliance rules (toughened for safety, laminated for heights)
-- Realistic ₹/sq.ft pricing based on Indian market rates
-- B2B2C customer segmentation (52 customer types across 9 groups)
-- Allied product ecosystem (hardware, sealants, frames, machinery)
+```bash
+# 1. Clone
+git clone https://github.com/yourusername/amalgus-glass-marketplace.git
+cd amalgus-glass-marketplace
+
+# 2. Install dependencies
+npm install
+
+# 3. Set up environment
+cp .env.example .env.local
+# Edit .env.local — add your Gemini API key
+# Get a free key: https://makersuite.google.com/app/apikey
+# NOTE: Platform works fully without a key (rule-based fallback)
+
+# 4. Run development server
+npm run dev
+# Open http://localhost:3000
+```
+
+---
+
+## 📊 Industry Knowledge Applied
+
+- Correct glass type + thickness + process combinations per application
+- Safety compliance rules enforced in AI: toughened for wet areas, laminated for heights, DGU for facades
+- Realistic ₹/sq.ft pricing from Gujarat, Maharashtra, Karnataka, and Telangana factory rates
+- B2B2C customer segmentation — 52 customer types across 9 groups reflected in role-aware UI
+- Allied product ecosystem: hardware, sealants, frames, fittings — cross-sold per glass type
+- Industry-standard specifications: IS 2553, IS 16229, LEED/GRIHA compliance notes
+
+---
