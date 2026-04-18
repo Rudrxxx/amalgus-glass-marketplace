@@ -1,35 +1,26 @@
 'use client';
 import { AlliedProduct } from '@/types';
-import { ShoppingCart } from 'lucide-react';
 
-interface Props {
-  products: AlliedProduct[];
-  title?: string;
-}
-
-export default function AlliedProducts({ products, title = "Allied Products" }: Props) {
+export default function AlliedProducts({ products, title = 'Allied Products' }: { products: AlliedProduct[]; title?: string }) {
   if (!products.length) return null;
-
   return (
     <div>
-      <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-4">{title}</h3>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        {products.map(product => (
-          <div key={product.id} className="glass-card rounded-xl p-4 hover:border-white/20 transition-all">
-            <div className="flex items-start gap-3">
-              <div className="text-2xl shrink-0">{product.icon}</div>
-              <div className="flex-1 min-w-0">
-                <div className="font-semibold text-white text-sm">{product.name}</div>
-                <div className="text-xs text-amber-500 mb-1">{product.category}</div>
-                <p className="text-xs text-gray-500 leading-relaxed line-clamp-2">{product.description}</p>
+      <div style={{ fontSize: 10, fontWeight: 700, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', marginBottom: 14 }}>{title}</div>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: 10 }}>
+        {products.map(p => (
+          <div key={p.id} className="glass-card-hover" style={{ borderRadius: 16, padding: 16 }}>
+            <div style={{ display: 'flex', gap: 12 }}>
+              <div style={{ fontSize: 24, flexShrink: 0 }}>{p.icon}</div>
+              <div>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 700, color: '#fff', marginBottom: 2 }}>{p.name}</div>
+                <div style={{ fontSize: 11, color: '#F59E0B', marginBottom: 6 }}>{p.category}</div>
+                <p style={{ fontSize: 11, color: 'rgba(255,255,255,0.35)', lineHeight: 1.5, margin: 0,
+                  display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{p.description}</p>
               </div>
             </div>
-            <div className="flex items-center justify-between mt-3 pt-3 border-t border-white/[0.06]">
-              <span className="text-sm font-semibold text-amber-400">{product.price}</span>
-              <button className="flex items-center gap-1.5 px-3 py-1.5 bg-white/[0.04] hover:bg-amber-500/10 border border-white/[0.08] hover:border-amber-500/30 text-gray-400 hover:text-amber-400 text-xs font-semibold rounded-lg transition-all">
-                <ShoppingCart size={11} />
-                Add
-              </button>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 12, paddingTop: 12, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+              <span style={{ fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 700, color: '#F59E0B' }}>{p.price}</span>
+              <button className="btn-ghost" style={{ padding: '5px 12px', fontSize: 11 }}>Add</button>
             </div>
           </div>
         ))}

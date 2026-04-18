@@ -1,70 +1,51 @@
 import { dailyRates } from '@/data/dailyRates';
-import { TrendingUp, TrendingDown, Minus, RefreshCw } from 'lucide-react';
 import RateTicker from '@/components/RateTicker';
 
 export default function RatesPage() {
-  const lastUpdated = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata', dateStyle: 'medium', timeStyle: 'short' });
-
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-      {/* Header */}
-      <div className="mb-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-space font-bold text-white mb-2">Daily Glass Rates</h1>
-            <p className="text-gray-400">Live market rates from factories across India. Updated daily.</p>
+    <div style={{ maxWidth: 1280, margin: '0 auto', padding: '48px 24px' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 32 }}>
+        <div>
+          <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 800, color: '#fff', margin: '0 0 8px', letterSpacing: '-0.02em' }}>Daily Glass Rates</h1>
+          <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 14, margin: 0 }}>Live market rates from factories across India. Updated daily.</p>
+        </div>
+        <div style={{ textAlign: 'right' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#34D399', fontSize: 12, fontWeight: 600, marginBottom: 4 }}>
+            <span className="pulse-dot" style={{ width: 6, height: 6, borderRadius: '50%', background: '#34D399', display: 'inline-block' }} />
+            Live Feed
           </div>
-          <div className="text-right text-xs text-gray-500">
-            <div className="flex items-center gap-1.5 text-amber-400 mb-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-amber-400 pulse-dot" />
-              Live
-            </div>
-            Last updated: {lastUpdated}
-          </div>
+          <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>{new Date().toLocaleDateString('en-IN', { dateStyle: 'medium' })}</div>
         </div>
       </div>
 
-      <RateTicker />
+      <div style={{ marginBottom: 32 }}><RateTicker /></div>
 
-      {/* Rate cards */}
-      <div className="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {dailyRates.map((rate, i) => (
-          <div key={i} className="glass-card rounded-2xl p-5 hover:border-white/20 transition-all">
-            <div className="flex items-start justify-between mb-4">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: 14 }}>
+        {dailyRates.map((r, i) => (
+          <div key={i} className="glass-card-hover" style={{ borderRadius: 18, padding: 20 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
               <div>
-                <h3 className="font-semibold text-white">{rate.glassType}</h3>
-                <p className="text-xs text-gray-500 mt-0.5">{rate.thickness}</p>
+                <h3 style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 14, color: '#fff', margin: '0 0 4px' }}>{r.glassType}</h3>
+                <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)', background: 'rgba(255,255,255,0.05)', padding: '2px 8px', borderRadius: 6 }}>{r.thickness}</span>
               </div>
-              <div className={`flex items-center gap-1 text-xs font-semibold px-2 py-1 rounded-full ${
-                rate.change > 0 ? 'bg-emerald-500/10 text-emerald-400' :
-                rate.change < 0 ? 'bg-red-500/10 text-red-400' :
-                'bg-gray-500/10 text-gray-400'
-              }`}>
-                {rate.change > 0 ? <TrendingUp size={11} /> : rate.change < 0 ? <TrendingDown size={11} /> : <Minus size={11} />}
-                {rate.change > 0 ? '+' : ''}{rate.change !== 0 ? `${rate.changePercent.toFixed(2)}%` : 'No Change'}
+              <div style={{
+                display: 'flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 99, fontSize: 11, fontWeight: 600,
+                background: r.change > 0 ? 'rgba(52,211,153,0.1)' : r.change < 0 ? 'rgba(248,113,113,0.1)' : 'rgba(255,255,255,0.05)',
+                color: r.change > 0 ? '#6EE7B7' : r.change < 0 ? '#FCA5A5' : 'rgba(255,255,255,0.3)',
+              }}>
+                {r.change > 0 ? '▲' : r.change < 0 ? '▼' : '—'}
+                {r.change !== 0 ? ` ${Math.abs(r.changePercent).toFixed(2)}%` : ' Flat'}
               </div>
             </div>
-
-            <div className="flex items-end justify-between">
-              <div>
-                <div className="text-3xl font-bold font-space text-amber-400">₹{rate.rate}</div>
-                <div className="text-xs text-gray-500">{rate.unit}</div>
-              </div>
-              <div className="text-right text-xs text-gray-600">
-                {rate.change !== 0 && (
-                  <div>
-                    Yesterday: ₹{(rate.rate - rate.change).toFixed(0)}
-                  </div>
-                )}
-              </div>
-            </div>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 800, color: '#F59E0B', lineHeight: 1, marginBottom: 4 }}>₹{r.rate}</div>
+            <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.25)' }}>{r.unit}</div>
+            {r.change !== 0 && <div style={{ fontSize: 11, color: 'rgba(255,255,255,0.2)', marginTop: 8 }}>Yesterday: ₹{(r.rate - r.change).toFixed(0)}</div>}
           </div>
         ))}
       </div>
 
-      {/* Note */}
-      <div className="mt-8 p-4 glass-card rounded-xl text-xs text-gray-500">
-        <p className="flex items-center gap-2"><RefreshCw size={12} />Rates are indicative market prices sourced from fabricators and distributors across Gujarat, Maharashtra, Telangana, and Karnataka. Actual transaction prices may vary based on quantity, location, and vendor terms. Contact vendors on AmalGus for confirmed pricing.</p>
+      <div className="glass-card" style={{ borderRadius: 14, padding: '14px 18px', marginTop: 24, fontSize: 12, color: 'rgba(255,255,255,0.3)', lineHeight: 1.7 }}>
+        Rates are indicative market prices sourced from fabricators and distributors across Gujarat, Maharashtra, Telangana, and Karnataka. Actual transaction prices may vary based on quantity, location, and vendor terms.
       </div>
     </div>
   );

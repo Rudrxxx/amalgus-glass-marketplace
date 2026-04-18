@@ -2,63 +2,48 @@
 import { ServicePartner } from '@/types';
 import { Star, MapPin, CheckCircle, Phone } from 'lucide-react';
 
-interface Props {
-  partners: ServicePartner[];
-}
-
-export default function ServicePartners({ partners }: Props) {
+export default function ServicePartners({ partners }: { partners: ServicePartner[] }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {partners.map(partner => (
-        <div key={partner.id} className="glass-card rounded-2xl p-5 hover:border-white/20 transition-all space-y-3">
-          {/* Header */}
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-500/20 flex items-center justify-center text-sm font-bold text-amber-400">
-              {partner.avatar}
+    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 16 }}>
+      {partners.map(p => (
+        <div key={p.id} className="glass-card-hover" style={{ borderRadius: 20, padding: 20 }}>
+          <div style={{ display: 'flex', gap: 12, marginBottom: 14 }}>
+            <div style={{ width: 46, height: 46, borderRadius: 14, background: 'linear-gradient(135deg, rgba(245,158,11,0.15), rgba(245,158,11,0.05))', border: '1px solid rgba(245,158,11,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 14, color: '#F59E0B', flexShrink: 0 }}>
+              {p.avatar}
             </div>
             <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-semibold text-white text-sm">{partner.name}</span>
-                {partner.verified && <CheckCircle size={13} className="text-amber-400" />}
+              <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 2 }}>
+                <span style={{ fontFamily: 'var(--font-display)', fontWeight: 700, fontSize: 14, color: '#fff' }}>{p.name}</span>
+                {p.verified && <CheckCircle size={13} color="#F59E0B" />}
               </div>
-              <div className="text-xs text-gray-500">{partner.specialty}</div>
+              <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.4)' }}>{p.specialty}</div>
             </div>
           </div>
 
-          {/* Location */}
-          <div className="flex items-center gap-1.5 text-xs text-gray-500">
-            <MapPin size={12} />
-            {partner.location}
+          <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'rgba(255,255,255,0.35)', marginBottom: 10 }}>
+            <MapPin size={12} />{p.location}
           </div>
 
-          {/* Rating + Experience */}
-          <div className="flex items-center justify-between text-xs">
-            <div className="flex items-center gap-1">
-              <Star size={12} className="text-amber-400 fill-amber-400" />
-              <span className="font-semibold text-white">{partner.rating}</span>
-              <span className="text-gray-600">({partner.reviewCount} reviews)</span>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+              <Star size={12} color="#F59E0B" fill="#F59E0B" />
+              <span style={{ fontSize: 13, fontWeight: 700, color: '#fff' }}>{p.rating}</span>
+              <span style={{ fontSize: 11, color: 'rgba(255,255,255,0.3)' }}>({p.reviewCount})</span>
             </div>
-            <span className="text-gray-500">{partner.experience}</span>
+            <span style={{ fontSize: 12, color: 'rgba(255,255,255,0.3)' }}>{p.experience}</span>
           </div>
 
-          {/* Tags */}
-          <div className="flex flex-wrap gap-1.5">
-            {partner.tags.map(tag => (
-              <span key={tag} className="text-[11px] px-2 py-0.5 bg-white/[0.04] border border-white/[0.06] text-gray-400 rounded-full">
-                {tag}
-              </span>
-            ))}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 16 }}>
+            {p.tags.map(t => <span key={t} className="tag">{t}</span>)}
           </div>
 
-          {/* Price + CTA */}
-          <div className="flex items-center justify-between pt-2 border-t border-white/[0.06]">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.06)' }}>
             <div>
-              <div className="text-xs text-gray-600">Rate</div>
-              <div className="text-sm font-semibold text-amber-400">{partner.priceRange}</div>
+              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', marginBottom: 2 }}>Rate</div>
+              <div style={{ fontFamily: 'var(--font-display)', fontSize: 13, fontWeight: 700, color: '#F59E0B' }}>{p.priceRange}</div>
             </div>
-            <button className="flex items-center gap-1.5 px-3 py-2 bg-amber-500/10 hover:bg-amber-500 border border-amber-500/30 hover:border-amber-500 text-amber-400 hover:text-black text-xs font-semibold rounded-lg transition-all">
-              <Phone size={11} />
-              Contact
+            <button className="btn-primary" style={{ padding: '8px 16px', fontSize: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
+              <Phone size={12} /> Contact
             </button>
           </div>
         </div>

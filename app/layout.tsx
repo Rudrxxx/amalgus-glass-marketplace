@@ -1,27 +1,22 @@
 import type { Metadata } from 'next';
-import { Inter, Space_Grotesk } from 'next/font/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
-const spaceGrotesk = Space_Grotesk({ subsets: ['latin'], variable: '--font-space' });
-
 export const metadata: Metadata = {
-  title: 'AmalGus — World\'s First B2B2C Glass Marketplace',
-  description: 'Buy glass, get instant estimates, compare vendors, and find certified installers. AI-powered glass discovery for architects, builders, homeowners and dealers.',
-  keywords: 'glass marketplace, toughened glass, laminated glass, DGU, glass price, glass estimate, India',
-  openGraph: {
-    title: 'AmalGus Glass Marketplace',
-    description: 'AI-powered glass discovery and procurement platform',
-    type: 'website',
-  },
+  title: "AmalGus — World's First B2B2C Glass Marketplace",
+  description: 'AI-powered glass discovery, instant estimates, verified vendors and certified installers.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable}`}>
-      <body className="bg-[#0A0A0B] text-white antialiased font-inter min-h-screen flex flex-col">
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+      </head>
+      <body className="min-h-screen flex flex-col">
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />

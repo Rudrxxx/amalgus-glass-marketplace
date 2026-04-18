@@ -2,170 +2,133 @@
 import { useState } from 'react';
 import { Sparkles, Send, AlertTriangle, ChevronRight, Loader2 } from 'lucide-react';
 import { AIMatchResult, CustomerRole } from '@/types';
-import clsx from 'clsx';
 
-const sampleQueries = [
-  "I need glass for my bathroom shower",
-  "Soundproof glass for my office cabin",
-  "Glass railing for balcony on 15th floor",
-  "Energy efficient glass for south-facing facade",
-  "Decorative glass for kitchen backsplash",
-  "Privacy glass for conference room",
+const samples = [
+  "Glass for bathroom shower",
+  "Soundproof office cabin",
+  "Balcony railing 15th floor",
+  "Energy efficient south facade",
+  "Kitchen backsplash decorative",
+  "Privacy conference room",
 ];
 
-interface Props {
-  role: CustomerRole;
-}
-
-export default function AIMatchWidget({ role }: Props) {
-  const [query, setQuery] = useState('');
+export default function AIMatchWidget({ role }: { role: CustomerRole }) {
+  const [q, setQ] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<AIMatchResult | null>(null);
   const [error, setError] = useState('');
 
-  const handleSubmit = async (q?: string) => {
-    const searchQuery = q || query;
-    if (!searchQuery.trim()) return;
-
-    setLoading(true);
-    setError('');
-    setResult(null);
-    if (q) setQuery(q);
-
+  const submit = async (query?: string) => {
+    const text = query || q;
+    if (!text.trim()) return;
+    setLoading(true); setError(''); setResult(null);
+    if (query) setQ(query);
     try {
       const res = await fetch('/api/ai-match', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: searchQuery, role }),
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: text, role }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       setResult(data.result);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : 'Something went wrong');
-    } finally {
-      setLoading(false);
-    }
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Error occurred');
+    } finally { setLoading(false); }
   };
 
   return (
-    <div className="space-y-6">
-      {/* Input */}
-      <div className="relative">
-        <div className="flex gap-2">
-          <div className="flex-1 relative">
-            <input
-              type="text"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              onKeyDown={e => e.key === 'Enter' && handleSubmit()}
-              placeholder="Describe your glass requirement in plain language..."
-              className="w-full bg-white/[0.04] border border-white/[0.10] rounded-xl px-4 py-3.5 text-sm text-white placeholder:text-gray-600 focus:outline-none focus:border-amber-500/50 focus:bg-white/[0.06] transition-all pr-12"
-            />
-          </div>
-          <button
-            onClick={() => handleSubmit()}
-            disabled={loading || !query.trim()}
-            className={clsx(
-              'px-5 py-3.5 rounded-xl font-semibold text-sm flex items-center gap-2 transition-all',
-              loading || !query.trim()
-                ? 'bg-white/[0.05] text-gray-600 cursor-not-allowed'
-                : 'bg-amber-500 hover:bg-amber-400 text-black'
-            )}
-          >
-            {loading ? <Loader2 size={16} className="animate-spin" /> : <Sparkles size={16} />}
-            <span className="hidden sm:inline">{loading ? 'Matching...' : 'Match Glass'}</span>
-          </button>
-        </div>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      {/* Input row */}
+      <div style={{ display: 'flex', gap: 10 }}>
+        <input value={q} onChange={e => setQ(e.target.value)} onKeyDown={e => e.key === 'Enter' && submit()}
+          placeholder="Describe your glass requirement in plain language..."
+          className="input-field" style={{ flex: 1 }} />
+        <button onClick={() => submit()} disabled={loading || !q.trim()} className="btn-primary" style={{
+          padding: '12px 20px', opacity: loading || !q.trim() ? 0.4 : 1,
+          pointerEvents: loading || !q.trim() ? 'none' : 'auto',
+        }}>
+          {loading ? <Loader2 size={16} style={{ animation: 'spin 1s linear infinite' }} /> : <Sparkles size={16} />}
+          <span style={{ display: 'none' }} className="sm:inline">{loading ? 'Matching...' : 'Match'}</span>
+        </button>
       </div>
 
-      {/* Sample queries */}
-      <div className="flex flex-wrap gap-2">
-        {sampleQueries.map(q => (
-          <button
-            key={q}
-            onClick={() => handleSubmit(q)}
-            className="text-xs px-3 py-1.5 bg-white/[0.04] hover:bg-white/[0.08] border border-white/[0.07] hover:border-white/20 text-gray-400 hover:text-white rounded-full transition-all"
-          >
-            {q}
-          </button>
+      {/* Sample chips */}
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8 }}>
+        {samples.map(s => (
+          <button key={s} onClick={() => submit(s)} style={{
+            padding: '6px 14px', borderRadius: 99, fontSize: 12, cursor: 'pointer',
+            background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+            color: 'rgba(255,255,255,0.5)', transition: 'all 0.15s',
+          }}
+          onMouseEnter={e => { const el = e.currentTarget; el.style.borderColor = 'rgba(255,255,255,0.18)'; el.style.color = '#fff'; }}
+          onMouseLeave={e => { const el = e.currentTarget; el.style.borderColor = 'rgba(255,255,255,0.08)'; el.style.color = 'rgba(255,255,255,0.5)'; }}
+          >{s}</button>
         ))}
       </div>
 
-      {/* Error */}
       {error && (
-        <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400 text-sm">
-          <AlertTriangle size={16} />
-          {error}
+        <div style={{ display: 'flex', gap: 8, padding: '12px 16px', background: 'rgba(248,113,113,0.08)', border: '1px solid rgba(248,113,113,0.2)', borderRadius: 12, color: '#FCA5A5', fontSize: 13 }}>
+          <AlertTriangle size={16} style={{ flexShrink: 0 }} /> {error}
         </div>
       )}
 
-      {/* Result */}
       {result && (
-        <div className="glass-card rounded-2xl p-6 amber-glow space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-300">
-          {/* Header */}
-          <div className="flex items-start justify-between">
+        <div className="glass-card amber-glow" style={{ borderRadius: 20, padding: 24, animation: 'fade-up 0.35s ease-out' }}>
+          {/* Top row */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 20 }}>
             <div>
-              <div className="flex items-center gap-2 mb-1">
-                <Sparkles size={16} className="text-amber-400" />
-                <span className="text-xs font-semibold text-amber-400 uppercase tracking-wider">AI Recommendation</span>
-              </div>
-              <h3 className="text-xl font-bold text-white">{result.recommendedProduct}</h3>
+              <div className="section-label" style={{ marginBottom: 8 }}><Sparkles size={10} />AI Recommendation</div>
+              <h3 style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 800, color: '#fff', margin: 0 }}>{result.recommendedProduct}</h3>
             </div>
-            <div className="text-right">
-              <div className="text-xs text-gray-500 mb-1">Est. Price Range</div>
-              <div className="text-lg font-bold text-amber-400">{result.estimatedPriceRange}</div>
-              <div className="text-xs text-gray-500">per sq.ft</div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', marginBottom: 4 }}>Est. Price</div>
+              <div style={{ fontFamily: 'var(--font-display)', fontSize: 20, fontWeight: 800, color: '#F59E0B' }}>{result.estimatedPriceRange}</div>
+              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)' }}>per sq.ft</div>
             </div>
           </div>
 
-          {/* Specs */}
-          <div className="grid grid-cols-3 gap-3">
-            {[
-              { label: 'Glass Type', value: result.glassType },
-              { label: 'Thickness', value: result.thickness },
-              { label: 'Process', value: result.process },
-            ].map(spec => (
-              <div key={spec.label} className="bg-white/[0.03] border border-white/[0.06] rounded-lg p-3 text-center">
-                <div className="text-xs text-gray-500 mb-1">{spec.label}</div>
-                <div className="text-sm font-semibold text-white">{spec.value}</div>
+          {/* Specs grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 20 }}>
+            {[{ l: 'Glass Type', v: result.glassType }, { l: 'Thickness', v: result.thickness }, { l: 'Process', v: result.process }].map(s => (
+              <div key={s.l} style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)', borderRadius: 12, padding: '12px', textAlign: 'center' }}>
+                <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', marginBottom: 4, textTransform: 'uppercase', letterSpacing: '0.06em' }}>{s.l}</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#fff', fontFamily: 'var(--font-display)' }}>{s.v}</div>
               </div>
             ))}
           </div>
 
           {/* Reason */}
-          <div>
-            <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Why This Glass</div>
-            <p className="text-sm text-gray-300 leading-relaxed">{result.reason}</p>
+          <div style={{ marginBottom: 16 }}>
+            <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 6 }}>Why This Glass</div>
+            <p style={{ fontSize: 13, color: 'rgba(255,255,255,0.65)', lineHeight: 1.7, margin: 0 }}>{result.reason}</p>
           </div>
 
           {/* Safety note */}
           {result.safetyNote && (
-            <div className="flex gap-2 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg">
-              <AlertTriangle size={16} className="text-amber-400 shrink-0 mt-0.5" />
-              <p className="text-sm text-amber-300">{result.safetyNote}</p>
+            <div style={{ display: 'flex', gap: 10, padding: '12px 14px', background: 'rgba(245,158,11,0.08)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: 12, marginBottom: 16 }}>
+              <AlertTriangle size={15} color="#F59E0B" style={{ flexShrink: 0, marginTop: 1 }} />
+              <p style={{ fontSize: 12, color: '#FDE68A', margin: 0, lineHeight: 1.6 }}>{result.safetyNote}</p>
             </div>
           )}
 
           {/* Tips */}
           {result.applicationTips?.length > 0 && (
-            <div>
-              <div className="text-xs text-gray-500 uppercase tracking-wider mb-2">Application Tips</div>
-              <ul className="space-y-1.5">
+            <div style={{ marginBottom: 16 }}>
+              <div style={{ fontSize: 10, color: 'rgba(255,255,255,0.3)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: 8 }}>Application Tips</div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
                 {result.applicationTips.map((tip, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-gray-400">
-                    <ChevronRight size={14} className="text-amber-500 shrink-0 mt-0.5" />
+                  <div key={i} style={{ display: 'flex', gap: 8, fontSize: 13, color: 'rgba(255,255,255,0.55)' }}>
+                    <ChevronRight size={14} color="#F59E0B" style={{ flexShrink: 0, marginTop: 2 }} />
                     {tip}
-                  </li>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           )}
 
-          {/* Alternative */}
           {result.alternativeOption && (
-            <div className="pt-2 border-t border-white/[0.06] text-sm text-gray-500">
-              <span className="text-gray-400">Alternative: </span>{result.alternativeOption}
+            <div style={{ paddingTop: 14, borderTop: '1px solid rgba(255,255,255,0.06)', fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>
+              <span style={{ color: 'rgba(255,255,255,0.55)' }}>Alternative: </span>{result.alternativeOption}
             </div>
           )}
         </div>

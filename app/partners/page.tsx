@@ -1,38 +1,23 @@
 import { servicePartners } from '@/data/servicePartners';
 import ServicePartners from '@/components/ServicePartners';
-import { Users, MapPin, ShieldCheck } from 'lucide-react';
 
 export default function PartnersPage() {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
-      {/* Header */}
-      <div className="mb-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-amber-500/10 border border-amber-500/20 rounded-full text-xs font-semibold text-amber-400 mb-4">
-          <Users size={12} />
-          Certified Installer Network
-        </div>
-        <h1 className="text-3xl font-space font-bold text-white mb-2">Find Glass Installers</h1>
-        <p className="text-gray-400 max-w-xl">
-          Verified installation professionals across India. Rated by real customers. Book directly on AmalGus.
-        </p>
+    <div style={{ maxWidth: 1280, margin: '0 auto', padding: '48px 24px' }}>
+      <div style={{ marginBottom: 40 }}>
+        <div className="section-label" style={{ marginBottom: 16 }}>Certified Installer Network</div>
+        <h1 style={{ fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 800, color: '#fff', margin: '0 0 10px', letterSpacing: '-0.02em' }}>Find Glass Installers</h1>
+        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: 15, margin: 0 }}>Verified installation professionals across India. Rated by real customers.</p>
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-3 gap-4 mb-10">
-        {[
-          { label: 'Verified Partners', value: '500+', icon: ShieldCheck },
-          { label: 'Cities Covered', value: '42', icon: MapPin },
-          { label: 'Jobs Completed', value: '12,000+', icon: Users },
-        ].map(stat => {
-          const Icon = stat.icon;
-          return (
-            <div key={stat.label} className="glass-card rounded-xl p-4 text-center">
-              <Icon size={18} className="text-amber-400 mx-auto mb-2" />
-              <div className="text-xl font-bold font-space text-white">{stat.value}</div>
-              <div className="text-xs text-gray-500 mt-0.5">{stat.label}</div>
-            </div>
-          );
-        })}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 14, marginBottom: 40 }}>
+        {[['500+', 'Verified Partners', '✅'], ['42', 'Cities Covered', '📍'], ['12,000+', 'Jobs Completed', '🔨']].map(([v, l, icon]) => (
+          <div key={l} className="glass-card" style={{ borderRadius: 16, padding: 20, textAlign: 'center' }}>
+            <div style={{ fontSize: 24, marginBottom: 8 }}>{icon}</div>
+            <div style={{ fontFamily: 'var(--font-display)', fontSize: 26, fontWeight: 800, color: '#fff', marginBottom: 4 }}>{v}</div>
+            <div style={{ fontSize: 12, color: 'rgba(255,255,255,0.35)' }}>{l}</div>
+          </div>
+        ))}
       </div>
 
       <ServicePartners partners={servicePartners} />
